@@ -1,0 +1,18 @@
+{
+  "name": "Coffee",
+  "description": "A light editor for CoffeeScript!",
+  "version": "0.1.0",
+  "permissions": [
+    "http://api.getdropbox.com/*",
+	"http://api.dropbox.com/*"
+  ],
+  "app": {
+    "launch": {
+      "local_path": "coffee.html"
+    }
+  },
+  "icons": {
+    "16": "i/coffee.png",
+    "128": "i/coffee.png"
+  }
+}

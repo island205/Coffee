@@ -1,0 +1,12 @@
+getFileCb=(data)->
+	console.log data
+	return 
+getFolderContentsCb=(data)->
+	folderContents=data
+	console.log data.contents[0].path
+	dropbox.getFile data.contents[0].path,getFileCb
+	return 
+
+if dropbox
+	dropbox.getFolderContents "",getFolderContentsCb
+	
