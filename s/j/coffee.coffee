@@ -19,14 +19,16 @@ $ ()->
 		events:{
 			"click .del":"delFile"
 		}
+		initialize:()->
+			@model.view=@
 		render:()->
 			$(@el).html @template $("#file-template").html(),@model.toJSON()
 			@
 		delFile:()->
 			model=@model
 			@model.destroy {success:()->
-								model.collection.reset()
-							}
+						$(model.view.el).remove()
+						}
 	}
 	files=new Files
 
@@ -52,3 +54,24 @@ $ ()->
 	}
 
 	filesView=new FilesView()
+
+	Editors=Backbone.View.extend {
+		el:'#ditors'
+		events:{
+			"click #btn-save":"saveFile"
+		}
+		initialize:()->
+			@coffeeEditor=@makeEditor "coffee-editor","twilight",'coffee'
+			@scriptEditor=@makeEditor "script-editor","twilight",'javascript'
+			@
+		makeEditor:(id,theme,mode)->
+			editor=ace.edit id
+			editor.setTheme "ace/theme/#{theme}"
+			Mode=(require "ace/mode/#{mode}").Mode
+			(editor.getSession()).setMode new Mode
+			editor
+		saveFile:()->
+			console.log "save file"
+	}
+
+	edtiors=new Editors

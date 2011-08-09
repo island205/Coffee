@@ -3,7 +3,7 @@
     template: Mustache.to_html
   });
   $(function() {
-    var File, FileView, Files, FilesView, files, filesView;
+    var Editors, File, FileView, Files, FilesView, edtiors, files, filesView;
     File = Backbone.Model.extend({
       "default": {
         name: "newfile.coffee",
@@ -20,6 +20,9 @@
       events: {
         "click .del": "delFile"
       },
+      initialize: function() {
+        return this.model.view = this;
+      },
       render: function() {
         $(this.el).html(this.template($("#file-template").html(), this.model.toJSON()));
         return this;
@@ -29,7 +32,7 @@
         model = this.model;
         return this.model.destroy({
           success: function() {
-            return model.collection.reset();
+            return $(model.view.el).remove();
           }
         });
       }
@@ -63,6 +66,29 @@
         });
       }
     });
-    return filesView = new FilesView();
+    filesView = new FilesView();
+    Editors = Backbone.View.extend({
+      el: '#ditors',
+      events: {
+        "click #btn-save": "saveFile"
+      },
+      initialize: function() {
+        this.coffeeEditor = this.makeEditor("coffee-editor", "twilight", 'coffee');
+        this.scriptEditor = this.makeEditor("script-editor", "twilight", 'javascript');
+        return this;
+      },
+      makeEditor: function(id, theme, mode) {
+        var Mode, editor;
+        editor = ace.edit(id);
+        editor.setTheme("ace/theme/" + theme);
+        Mode = (require("ace/mode/" + mode)).Mode;
+        (editor.getSession()).setMode(new Mode);
+        return editor;
+      },
+      saveFile: function() {
+        return console.log("save file");
+      }
+    });
+    return edtiors = new Editors;
   });
 }).call(this);
