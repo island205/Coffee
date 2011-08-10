@@ -67,19 +67,25 @@ a img {
 #editors {
   width: 960px;
   margin: 0 auto;
+}
+/* line 12, src/application.scss */
+#editors .coffee-wrap, #editors .script-wrap {
   position: relative;
+  height: 650px;
 }
-/* line 13, src/application.scss */
+/* line 16, src/application.scss */
+#editors .coffee-wrap {
+  float: left;
+  width: 60%;
+}
+/* line 20, src/application.scss */
+#editors .script-wrap {
+  float: right;
+  width: 40%;
+}
+/* line 24, src/application.scss */
 #editors #coffee-editor, #editors #script-editor {
-  width: 480px;
-  height: 600px;
   position: absolute;
-}
-/* line 18, src/application.scss */
-#editors #coffee-editor {
-  left: 0px;
-}
-/* line 21, src/application.scss */
-#editors #script-editor {
-  right: 0px;
+  width: 100%;
+  height: 100%;
 }
