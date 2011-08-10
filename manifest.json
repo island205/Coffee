@@ -12,7 +12,7 @@
     }
   },
   "icons": {
-    "16": "i/coffee.png",
-    "128": "i/coffee.png"
+    "16": "i/coffee16.png",
+    "128": "i/coffee128.png"
   }
 }
