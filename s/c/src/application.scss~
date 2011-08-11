@@ -1,0 +1,23 @@
+@import 'compass/reset';
+
+#files-panel{
+	.del{
+		float:right;
+	}
+}
+
+#editors{
+	width:960px;
+	margin:0 auto;
+	position:relative;
+	#coffee-editor,#script-editor{
+		width:480px;
+		height:600px;
+		position:absolute;
+		left:0px;	
+	}
+	#script-editor{
+		right:0px;	
+	}
+}
+
