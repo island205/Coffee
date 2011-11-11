@@ -1,10 +1,31 @@
-﻿<!DOCTYPE html>
-
-<html>
-    <head>
-        <title>Coffee</title>
-        <link rel="stylesheet" href="s/c/application.css"></link>
-        <!-- ace -->
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Coffee</title>
+	<link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css">
+	<style type="text/css">
+		body{
+			padding-top:60px;
+		}
+		.editors{
+			min-height:550px;
+		}
+		.script-wrap,.coffee-wrap{
+			width:50%;
+			float:left;
+			min-height:550px;
+			outline:1px solid silver;
+		}
+		.coffee-wrap{
+			float:right;
+		}
+		#coffee-editor,#script-editor{
+			height:100%;
+			width:470px;
+		}
+	</style>
+		<!-- ace -->
         <script src="s/j/l/ace.js" type="text/javascript"></script>
         <script src="s/j/l/mode-coffee.js" type="text/javascript"></script>
         <script src="s/j/l/mode-javascript.js" type="text/javascript"></script>
@@ -24,30 +45,46 @@
         <script src="s/j/l/jquery-1.6.2.js" type="text/javascript"></script>
         <script src="s/j/l/backbone.js" type="text/javascript"></script>
         <script src="s/j/l/backbone-localstorage.js" type="text/javascript"></script>
-
         <script src="s/j/coffee.js" type="text/javascript"></script>
-    </head>
-    <body>
-    	<div class="wrap">
-    	<div id="files-view">
-    		<div class="files-view-panel">
-				<h1><a href="javascript:void(0);" id="new-file">new</a></h1>
-				<ul id="files-panel"></ul>
-			</div>    	
-    	</div>
-    	<div id="editors">
-    		<div class="script-wrap">
-    			<div id="script-editor"></div>
-    		</div>    		
-    		<div class="coffee-wrap"> 		
-    			<div id="coffee-editor"></div>
-    		</div>
-    	</div>
-    	</div>
-    	<script type="text/template" id="file-template">
-			<div>
-				<a class="file" href="javascript:void(0);" title={{name}}>{{name}}</a><a class="del" href="javascript:void(0);">del</a>			
-			</div>    	
-    	</script>
-    </body>
+</head>
+<body>
+	<div class="topbar">
+		<div class="topbar-inner">
+			<div class="container-fluid">
+				<a href="" class="brand">Coffee</a>
+				<ul class="nav">
+					<li class="active">
+						<a href="#">New</a>
+					</li>
+					<li>
+						<a href="">Run</a>
+					</li>
+					<li>
+						<a href=""></a>
+					</li>
+				</ul>
+				<p class="pull-right">
+					<a href="">enjoy coffee-script!</a>
+				</p>
+			</div>
+		</div>
+	</div>
+	<div class="container-fluid">
+		<div class="sidebar">
+			<div class="well"></div>
+		</div>
+		<div class="content">
+			<div class="well">
+				<div class="editors">
+					<div class="coffee-wrap">
+						<div id="coffee-editor"></div>
+					</div>
+					<div class="script-wrap">
+						<div id="script-editor"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>	
+</body>
 </html>
