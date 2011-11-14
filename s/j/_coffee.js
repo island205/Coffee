@@ -1,8 +1,7 @@
-
+(function() {
   _.extend(Backbone.View.prototype, {
     template: Mustache.to_html
   });
-
   $(function() {
     var Editors, File, FileView, Files, FilesView, editors, files, filesView;
     File = Backbone.Model.extend({
@@ -134,3 +133,4 @@
     });
     return filesView = new FilesView();
   });
+}).call(this);

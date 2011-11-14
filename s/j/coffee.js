@@ -1,6 +1,15 @@
 (function() {
-  var coffee;
-
+  var app, coffee, getClientHeight;
+  getClientHeight = function() {
+    var div;
+    div = $("<div>").css({
+      position: "fixed",
+      bottom: 0,
+      right: 0
+    });
+    div.appendTo($(document.body));
+    return div.offset();
+  };
   coffee = {
     cache: {},
     init: function() {
@@ -37,9 +46,24 @@
       this.scriptEditor.getSession().setValue(code);
     }
   };
-
+  app = {
+    init: function() {
+      this.adjustSize();
+      return coffee.init();
+    },
+    adjustSize: function() {
+      var editors, offset;
+      offset = getClientHeight();
+      editors = $(".editors").css({
+        height: offset.top - 120 + "px"
+      });
+      return $("#coffee-editor,#script-editor").css({
+        height: offset.top - 120 + "px",
+        width: editors.width() / 2 + "px"
+      });
+    }
+  };
   $(function() {
-    coffee.init();
+    app.init();
   });
-
 }).call(this);

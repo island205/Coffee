@@ -1,3 +1,11 @@
+getClientHeight=->
+	div=$("<div>").css {
+		position:"fixed",
+		bottom:0,
+		right:0	
+	}
+	div.appendTo $(document.body)
+	return div.offset()
 coffee=
 	cache:{}
 	init:->
@@ -27,6 +35,18 @@ coffee=
 	refreshScript:(code)->
 		@scriptEditor.getSession().setValue code
 		return
+app=
+	init:->
+		@adjustSize()
+		coffee.init()
+	adjustSize:->
+		offset=getClientHeight()
+		editors=$(".editors").css {height:offset.top-120+"px"}
+		
+		$("#coffee-editor,#script-editor").css {
+			height:offset.top-120+"px"
+			width:editors.width()/2+"px"
+		}
 $ ->
-	coffee.init()
+	app.init()
 	return
