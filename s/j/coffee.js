@@ -1,36 +1,45 @@
 (function() {
-  var coffeeChangeCb, coffeeCode, coffeeEditor, historyScriptCode, makeEditor, refreshScript, scriptCode, scriptEditor;
-  coffeeEditor = null;
-  scriptEditor = null;
-  historyScriptCode = "";
-  scriptCode = "";
-  coffeeCode = "";
+  var coffee;
+
+  coffee = {
+    cache: {},
+    init: function() {
+      this.coffeeEditor = this.makeEditor('coffee-editor', 'twilight', 'coffee');
+      this.scriptEditor = this.makeEditor('script-editor', 'twilight', 'javascript');
+      this.bindEvent();
+    },
+    bindEvent: function() {
+      var that;
+      that = this;
+      this.coffeeEditor.getSession().on('change', function() {
+        var coffeeCode, scriptCode;
+        coffeeCode = that.coffeeEditor.getSession().getValue();
+        that.cache["hisScriptCode"] = scriptCode;
+        try {
+          scriptCode = CoffeeScript.compile(coffeeCode);
+        } catch (e) {
+          scriptCode = that.cache['hisScriptCode'];
+        }
+        if (scriptCode !== that.cache['hisScriptCode']) {
+          that.refreshScript(scriptCode);
+        }
+      });
+    },
+    makeEditor: function(id, theme, mode) {
+      var Mode, editor;
+      editor = ace.edit(id);
+      editor.setTheme("ace/theme/" + theme);
+      Mode = (require("ace/mode/" + mode)).Mode;
+      (editor.getSession()).setMode(new Mode);
+      return editor;
+    },
+    refreshScript: function(code) {
+      this.scriptEditor.getSession().setValue(code);
+    }
+  };
+
   $(function() {
-    coffeeEditor = makeEditor('coffee-editor', 'twilight', 'coffee');
-    scriptEditor = makeEditor('script-editor', 'twilight', 'javascript');
-    return (coffeeEditor.getSession()).on('change', coffeeChangeCb);
+    coffee.init();
   });
-  makeEditor = function(id, theme, mode) {
-    var Mode, editor;
-    editor = ace.edit(id);
-    editor.setTheme("ace/theme/" + theme);
-    Mode = (require("ace/mode/" + mode)).Mode;
-    (editor.getSession()).setMode(new Mode);
-    return editor;
-  };
-  coffeeChangeCb = function() {
-    coffeeCode = (coffeeEditor.getSession()).getValue();
-    historyScriptCode = scriptCode;
-    try {
-      scriptCode = CoffeeScript.compile(coffeeCode);
-    } catch (e) {
-      scriptCode = historyScriptCode;
-    }
-    if (scriptCode !== historyScriptCode) {
-      return refreshScript(scriptCode);
-    }
-  };
-  refreshScript = function(scriptCode) {
-    return (scriptEditor.getSession()).setValue(scriptCode);
-  };
+
 }).call(this);
