@@ -1,5 +1,6 @@
 (function() {
   var app, coffee, getClientHeight;
+
   getClientHeight = function() {
     var div;
     div = $("<div>").css({
@@ -10,12 +11,21 @@
     div.appendTo($(document.body));
     return div.offset();
   };
+
   coffee = {
     cache: {},
     init: function() {
       this.coffeeEditor = this.makeEditor('coffee-editor', 'twilight', 'coffee');
       this.scriptEditor = this.makeEditor('script-editor', 'twilight', 'javascript');
       this.bindEvent();
+    },
+    clear: function() {
+      this.coffeeEditor.getSession().setValue("");
+    },
+    run: function() {
+      var coffeeCode;
+      coffeeCode = this.coffeeEditor.getSession().getValue();
+      CoffeeScript.eval(coffeeCode);
     },
     bindEvent: function() {
       var that;
@@ -46,10 +56,12 @@
       this.scriptEditor.getSession().setValue(code);
     }
   };
+
   app = {
     init: function() {
       this.adjustSize();
-      return coffee.init();
+      coffee.init();
+      return this.bindCommands();
     },
     adjustSize: function() {
       var editors, offset;
@@ -61,9 +73,21 @@
         height: offset.top - 120 + "px",
         width: editors.width() / 2 + "px"
       });
+    },
+    bindCommands: function() {
+      $(".clear").click(function() {
+        coffee.clear();
+        return false;
+      });
+      return $(".run").click(function() {
+        coffee.run();
+        return false;
+      });
     }
   };
+
   $(function() {
     app.init();
   });
+
 }).call(this);

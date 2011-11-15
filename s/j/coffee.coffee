@@ -13,6 +13,13 @@ coffee=
 		@scriptEditor=@makeEditor 'script-editor','twilight','javascript'
 		@bindEvent()
 		return
+	clear:->
+		@coffeeEditor.getSession().setValue ""
+		return
+	run:->
+		coffeeCode=@coffeeEditor.getSession().getValue()
+		CoffeeScript.eval coffeeCode
+		return
 	bindEvent:->
 		that=@
 		@coffeeEditor.getSession().on 'change',->
@@ -39,6 +46,7 @@ app=
 	init:->
 		@adjustSize()
 		coffee.init()
+		@bindCommands()
 	adjustSize:->
 		offset=getClientHeight()
 		editors=$(".editors").css {height:offset.top-120+"px"}
@@ -47,6 +55,14 @@ app=
 			height:offset.top-120+"px"
 			width:editors.width()/2+"px"
 		}
+	bindCommands:->
+		$(".clear").click ->
+			coffee.clear()
+			return false
+		$(".run").click ->
+			coffee.run()
+			return false
+			
 $ ->
 	app.init()
 	return
