@@ -1,6 +1,12 @@
 (function() {
-  var app, coffee, getClientHeight;
-
+  var app, coffee, getClientHeight, gist, queryString;
+  queryString = function(key) {
+    var items;
+    items = window.location.search.slice(1).split("&").each(function(item) {
+      return item.split("=");
+    });
+    return items[key];
+  };
   getClientHeight = function() {
     var div;
     div = $("<div>").css({
@@ -11,7 +17,6 @@
     div.appendTo($(document.body));
     return div.offset();
   };
-
   coffee = {
     cache: {},
     init: function() {
@@ -56,7 +61,38 @@
       this.scriptEditor.getSession().setValue(code);
     }
   };
-
+  gist = {
+    init: function() {
+      var accessToken;
+      accessToken = this.getAccessToken();
+      if (accessToken) {
+        return this._init(accessToken);
+      }
+    },
+    _init: function(accessToken) {
+      return console.log(accessToken);
+    },
+    getAccessToken: function() {
+      var accessToken, code;
+      code = queryString("code");
+      if (code) {
+        window.localStorage.setItem("access_token", code);
+      }
+      return accessToken = window.localStorage.getItem("access_token") || code;
+    },
+    STATIC: {
+      clientId: '26ce4cc610c5d6b6a20a',
+      authorizeUrl: 'https://github.com/login/oauth/authorize',
+      redirectUri: 'http://island205.com/coffee/',
+      clientSecret: '2e73952571d438607742882af0d2445f5597ef70'
+    },
+    oauth: function() {
+      var S, url;
+      S = this.STATIC;
+      url = "" + S.authorizeUrl + "?client_id=" + S.clientId + "&redirect_uri=" + S.redirectUri;
+      return window.location.href = url;
+    }
+  };
   app = {
     init: function() {
       this.adjustSize();
@@ -79,15 +115,16 @@
         coffee.clear();
         return false;
       });
-      return $(".run").click(function() {
+      $(".run").click(function() {
         coffee.run();
         return false;
       });
+      return $(".gist").click(function() {
+        return gist.oauth();
+      });
     }
   };
-
   $(function() {
     app.init();
   });
-
 }).call(this);

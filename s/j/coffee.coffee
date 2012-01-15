@@ -1,3 +1,8 @@
+queryString=(key)->
+	items=window.location.search.slice(1).split("&").each (item)->
+		item.split "="
+	items[key]
+
 getClientHeight=->
 	div=$("<div>").css {
 		position:"fixed",
@@ -42,6 +47,27 @@ coffee=
 	refreshScript:(code)->
 		@scriptEditor.getSession().setValue code
 		return
+gist=
+	init:->
+		accessToken=@getAccessToken()
+		if accessToken
+			@_init accessToken
+	_init:(accessToken)->
+		console.log accessToken
+	getAccessToken:->
+		code=queryString "code"
+		if code
+			window.localStorage.setItem "access_token",code
+		accessToken=window.localStorage.getItem("access_token") or code
+	STATIC:
+		clientId:'26ce4cc610c5d6b6a20a'
+		authorizeUrl:'https://github.com/login/oauth/authorize'
+		redirectUri:'http://island205.com/coffee/'
+		clientSecret:'2e73952571d438607742882af0d2445f5597ef70'
+	oauth:->
+		S=@STATIC
+		url="#{S.authorizeUrl}?client_id=#{S.clientId}&redirect_uri=#{S.redirectUri}"
+		window.location.href=url
 app=
 	init:->
 		@adjustSize()
@@ -62,6 +88,8 @@ app=
 		$(".run").click ->
 			coffee.run()
 			return false
+		$(".gist").click ->
+			gist.oauth()
 			
 $ ->
 	app.init()
