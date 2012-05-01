@@ -1,11 +1,18 @@
 (function() {
   var app, coffee, getClientHeight, gist, queryString;
-  queryString = function(key) {
-    var items;
-    items = window.location.search.slice(1).split("&").each(function(item) {
-      return item.split("=");
-    });
-    return items[key];
+  queryString = function(key, default_) {
+    var qs, regex;
+    if (default_ === null) {
+      default_ = "";
+    }
+    key = key.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+    regex = new RegExp("[\\?&]" + key + "=([^&#]*)");
+    qs = regex.exec(window.location.href);
+    if (qs === null) {
+      return default_;
+    } else {
+      return qs[1];
+    }
   };
   getClientHeight = function() {
     var div;
@@ -62,41 +69,59 @@
     }
   };
   gist = {
+    accessToken: null,
     init: function() {
-      var accessToken;
-      accessToken = this.getAccessToken();
-      if (accessToken) {
-        return this._init(accessToken);
+      this.accessToken = this.getAccessToken();
+      if (this.accessToken) {
+        return this._init(this.accessToken);
+      } else {
+        this.oauth();
+        return console.log("oauth");
       }
     },
-    _init: function(accessToken) {
-      return console.log(accessToken);
+    _init: function() {
+      return console.log(this.accessToken);
     },
     getAccessToken: function() {
-      var accessToken, code;
-      code = queryString("code");
-      if (code) {
-        window.localStorage.setItem("access_token", code);
-      }
-      return accessToken = window.localStorage.getItem("access_token") || code;
+      var accessToken;
+      return accessToken = window.localStorage.getItem("access_token");
     },
     STATIC: {
       clientId: '26ce4cc610c5d6b6a20a',
       authorizeUrl: 'https://github.com/login/oauth/authorize',
-      redirectUri: 'http://island205.com/coffee/',
+      accessTokenUrl: "https://github.com/login/oauth/access_token",
+      redirectUri: window.location.href,
       clientSecret: '2e73952571d438607742882af0d2445f5597ef70'
     },
     oauth: function() {
-      var S, url;
+      var S, code, url;
       S = this.STATIC;
-      url = "" + S.authorizeUrl + "?client_id=" + S.clientId + "&redirect_uri=" + S.redirectUri;
-      return window.location.href = url;
+      code = queryString("code", null);
+      debugger;
+      if (code) {
+        return $.ajax({
+          url: "/getaccesstoken",
+          method: "POST",
+          data: {
+            code: code,
+            clientId: S.clientId,
+            clientSecret: S.clientSecret
+          },
+          success: function(data) {
+            return console.log(data);
+          }
+        });
+      } else {
+        url = "" + S.authorizeUrl + "?client_id=" + S.clientId + "&redirect_uri=" + S.redirectUri;
+        return window.location.href = url;
+      }
     }
   };
   app = {
     init: function() {
       this.adjustSize();
       coffee.init();
+      gist.init();
       return this.bindCommands();
     },
     adjustSize: function() {
